@@ -124,7 +124,7 @@ if __name__ == "__main__":
     
     plt.xlabel(r"$\log L$")
     plt.ylabel(r"$\log \tau(L)$")
-    plt.title(r"Dynamical Critical Exponent Simulation")
+    plt.title(r"dynamic critical exponent monte carlo")
     plt.legend()
     plt.grid(True)
     plt.tight_layout()

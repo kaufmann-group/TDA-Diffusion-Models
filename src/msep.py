@@ -227,7 +227,7 @@ class MultiSpeciesExclusionProcess:
         fig = plt.figure(figsize=(6, 6))
         ax = fig.add_subplot(111, projection="3d")
         ax.plot(path[:, 0], path[:, 1], path[:, 2], "-o", markersize=2)
-        ax.set_xlabel(r"h_1")
+        ax.set_xlabel(r"$h_1")
         ax.set_ylabel(r"h_2")
         ax.set_zlabel(r"h_3")
         ax.set_title("projected directed polymer path, d = 4")
