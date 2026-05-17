@@ -3,45 +3,13 @@ the goal of this program is to demonstrate the multi species
 exclusion process falls within the the KPZ universality class.
 """
 
+from msep.msep_cpp import MultiSpeciesExclusionProcess
+
+
 import numba as nb
 import scipy as sp
 import numpy as np
 import matplotlib.pyplot as plt
-
-from msep import MultiSpeciesExclusionProcess, jit_update
-
-@nb.njit
-def _jit_fourier_time_series(chain, rates_matrix, max_rate, n_samples=60000, species=0, sample_every=1):
-    state = chain.copy()
-    L = len(state)
-
-    q = 2.0 * np.pi / L
-
-    cos_q = np.empty(L, dtype=np.float64)
-    sin_q = np.empty(L, dtype=np.float64)
-
-    for j in range(L):
-        cos_q[j] = np.cos(q * j)
-        sin_q[j] = np.sin(q * j)
-
-    X = np.empty(n_samples, dtype=np.complex128)
-
-    for n in range(n_samples):
-        re = 0.0
-        im = 0.0
-
-        for j in range(L):
-            if state[j] == species:
-                re += cos_q[j]
-                im += sin_q[j]
-
-        X[n] = re + 1j * im
-
-        for _ in range(sample_every):
-            for _ in range(L):
-                jit_update(state, rates_matrix, max_rate)
-
-    return X
 
 """
 fast autocorrelation with fast fourier transform.
@@ -67,11 +35,31 @@ if __name__ == "__main__":
     for L in L_values:
         dimension = 3
         density = [1/3, 1/3, 1/3]
-        rates = {(0, 1) : 1.0, (1, 0) : 0.0, (0, 2) : 1.0, (2, 0) : 0.0, (1, 2) : 1.0, (2, 1) : 0.0}
 
-        process = MultiSpeciesExclusionProcess(dimension=dimension, density=density, rates=rates, length=L, checkPairwiseBalence=False)
+        rates_matrix = np.array(
+            [
+                [0.0, 1.0, 1.0],
+                [0.0, 0.0, 1.0],
+                [0.0, 0.0, 0.0],
+            ],
+            dtype=np.float64,
+        )
 
-        X = _jit_fourier_time_series(chain=process.chain, rates_matrix=process.rates_matrix, max_rate=process.max_rate)
+        process = MultiSpeciesExclusionProcess(
+            dimension=dimension,
+            density=density,
+            rates_matrix=rates_matrix,
+            length=L,
+            seed=2504,
+            shuffle=True,
+            check_pairwise_balance=False,
+        )
+
+        X = process.fourier_time_series(
+            n_samples=60000,
+            species=0,
+            sample_every=1,
+        )
         C = autocorrelation(X)
 
         t = np.arange(len(C))
