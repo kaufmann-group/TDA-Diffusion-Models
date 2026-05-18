@@ -5,6 +5,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 if __name__ == "__main__":
+    """
+    dimension 3 case: projects onto a plane.
+    """
     dimension = 3
     density = [1/3, 1/3, 1/3]
     length = 300
@@ -34,7 +37,7 @@ if __name__ == "__main__":
     plt.show()
 
     """
-    Dimension 4 case: projects onto a 3D hyperplane.
+    dimension 4 case: projects onto a cube.
     """
     dimension = 4
     density = [1/4, 1/4, 1/4, 1/4]

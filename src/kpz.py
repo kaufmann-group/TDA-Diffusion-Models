@@ -30,7 +30,7 @@ def autocorrelation(x):
 
 def get_dynamical_critical_exponent(species_size):
     taus = []
-    L_values = np.arange(species_size*10, species_size*100, species_size)
+    L_values = np.arange(10+(species_size-10%species_size), 300+(species_size-300%species_size), species_size)
 
     for L in L_values:
         dimension = species_size
