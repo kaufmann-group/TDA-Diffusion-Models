@@ -28,38 +28,19 @@ def autocorrelation(x):
     
     return unbiased_ac / unbiased_ac[0]
 
-if __name__ == "__main__":
-    L_values = np.arange(30, 300, 3)
+def get_dynamical_critical_exponent(species_size):
     taus = []
+    L_values = np.arange(species_size*10, species_size*100, species_size)
 
     for L in L_values:
-        dimension = 3
-        density = [1/3, 1/3, 1/3]
+        dimension = species_size
+        density = np.full(dimension, 1.0 / dimension, dtype=np.float64)
 
-        rates_matrix = np.array(
-            [
-                [0.0, 1.0, 1.0],
-                [0.0, 0.0, 1.0],
-                [0.0, 0.0, 0.0],
-            ],
-            dtype=np.float64,
-        )
+        rates_matrix = np.triu(np.ones((dimension, dimension), dtype=np.float64), k=1)
 
-        process = MultiSpeciesExclusionProcess(
-            dimension=dimension,
-            density=density,
-            rates_matrix=rates_matrix,
-            length=L,
-            seed=2504,
-            shuffle=True,
-            check_pairwise_balance=False,
-        )
+        process = MultiSpeciesExclusionProcess(dimension=dimension, density=density, rates_matrix=rates_matrix, length=L, seed=2504, shuffle=True)
 
-        X = process.fourier_time_series(
-            n_samples=60000,
-            species=0,
-            sample_every=1,
-        )
+        X = process.fourier_time_series(n_samples=60000, species=0, sample_every=1)
         C = autocorrelation(X)
 
         t = np.arange(len(C))
@@ -95,16 +76,32 @@ if __name__ == "__main__":
             )
 
         slope, intercept = np.polyfit(t[mask], np.log(envelope_smooth[mask]), 1)
-        taus.append(-1.0 / slope)
+        
+        # this part is sketchy ... 
+        if slope >= 0: 
+            taus.append(np.nan)
+        else:
+            taus.append(-1.0 / slope)
 
     taus = np.array(taus)
-    logL = np.log(L_values)
-    logtau = np.log(taus)        
+    valid = np.isfinite(taus) & (taus > 0)
+
+    logL = np.log(L_values[valid])
+    logtau = np.log(taus[valid])      
 
     z, intercept = np.polyfit(logL, logtau, 1)
     fit = intercept + z * logL
 
-    print(f"z = {z:.3f}")
+    return logL, logtau, fit, z
+
+if __name__ == "__main__":
+    """
+    solving for the critical dynamical exponent for 3 species
+    """
+
+    logL, logtau, fit, z = get_dynamical_critical_exponent(species_size=3)
+
+    print(f"for 3 species, z = {z:.3f}")
 
     plt.figure(figsize=(6, 4))
     plt.plot(logL, logtau, "o", label="monte carlo data")
@@ -119,3 +116,29 @@ if __name__ == "__main__":
 
     plt.savefig("figures/dynamical_critical_exponent_simulation.png", dpi=300)
     plt.show()
+
+    """
+    solving for the critical dynamical exponent for n = 2, 3, 4, 5, 6, 7, 8, and 9 species
+    """
+    fig, axes = plt.subplots(4, 2, figsize=(10, 15)) 
+
+    for species_size, ax in zip(np.arange(2, 10, 1), axes.flatten()): 
+        logL, logtau, fit, z = get_dynamical_critical_exponent(species_size=species_size) 
+        
+        print(f"for {species_size} species, z = {z:.3f}")
+        
+        ax.plot(logL, logtau, "o", label="monte carlo data")
+        ax.plot(logL, fit, "--", label=fr"$z \approx {z:.3f}$")
+        ax.set_xlabel(r"$\log L$")
+        ax.set_ylabel(r"$\log \tau(L)$")
+        
+        ax.set_title(f"Size = {species_size}")
+        ax.legend()
+        ax.grid(True)
+
+    fig.tight_layout() 
+
+    plt.savefig("figures/many_species_dynamical_critical_exponent_simulation.png", dpi=300)
+    plt.show()
+
+    
