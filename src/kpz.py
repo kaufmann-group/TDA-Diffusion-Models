@@ -5,14 +5,13 @@ exclusion process falls within the the KPZ universality class.
 
 from msep.msep_cpp import MultiSpeciesExclusionProcess
 
-
 import numba as nb
 import scipy as sp
 import numpy as np
 import matplotlib.pyplot as plt
 
 """
-fast autocorrelation with fast fourier transform.
+autocorrelation with fast fourier transform.
 """
 def autocorrelation(x):
     signal = np.asarray(x)

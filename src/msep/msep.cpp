@@ -20,7 +20,7 @@ namespace py = pybind11;
 namespace {
 
 double rate_at(const std::vector<double>& rates, int d, int alpha, int beta)
- {
+{
     return rates[static_cast<std::size_t>(alpha) * d + beta];
 }
 
@@ -36,7 +36,7 @@ std::vector<double> flatten_rates(py::array_t<double, py::array::c_style | py::a
     return std::vector<double>(ptr, ptr + static_cast<std::size_t>(d) * d);
 }
 
-} // namespace
+}
 
 class MultiSpeciesExclusionProcess {
 public:
@@ -66,10 +66,6 @@ public:
           rng(seed) 
     {
         max_rate = *std::max_element(rates_matrix.begin(), rates_matrix.end());
-        if (max_rate == 0.0) 
-        {
-            max_rate = 1.0;  // avoid division by zero; all proposed swaps are rejected
-        }
 
         proj_vectors = build_projected_vectors();
         chain = build_chain();
@@ -87,11 +83,6 @@ public:
 
     py::array_t<int> simulate(int steps = 100000, bool store_history = false)
     {
-        if (steps < 0) 
-        {
-            throw std::invalid_argument("steps must be nonnegative");
-        }
-
         if (store_history) 
         {
             std::vector<int> history(static_cast<std::size_t>(steps + 1) * length);
@@ -106,16 +97,18 @@ public:
             py::array_t<int> out({steps + 1, length});
             std::copy(history.begin(), history.end(), static_cast<int*>(out.request().ptr));
             return out;
-        }
-
-        for (int step = 0; step < steps; ++step) 
+        } 
+        else 
         {
-            update_state(chain);
-        }
+            for (int step = 0; step < steps; ++step) 
+            {
+                update_state(chain);
+            }
 
-        py::array_t<int> out(length);
-        std::copy(chain.begin(), chain.end(), static_cast<int*>(out.request().ptr));
-        return out;
+            py::array_t<int> out(length);
+            std::copy(chain.begin(), chain.end(), static_cast<int*>(out.request().ptr));
+            return out;
+        }
     }
 
     py::array_t<int> get_chain() const 
@@ -192,7 +185,6 @@ public:
                 }
             }
         }
-
         return out;
     }
 
@@ -262,6 +254,8 @@ private:
         return std::sqrt(dot(a, a));
     }
 
+
+    // gram schmidt process
     std::vector<std::vector<double>> build_plane_basis() const 
     {
         std::vector<std::vector<double>> basis;
@@ -282,10 +276,6 @@ private:
             }
 
             const double n = norm(v);
-            if (n < 1e-14) 
-            {
-                throw std::runtime_error("can't construct projection basis");
-            }
             for (double& x : v) 
             {
                 x /= n;
@@ -302,7 +292,7 @@ private:
         const auto basis = build_plane_basis();
         std::vector<double> coords(static_cast<std::size_t>(dimension) * path_dim, 0.0);
 
-        // Coordinate of projected e_i along basis vector b_k. Since b_k lies in the
+        // coordinate of projected e_i along basis vector b_k since b_k lies in the
         // plane sum(x_i)=0, dot(e_i - n_hat/dot correction, b_k) = dot(e_i, b_k)
         for (int species = 0; species < dimension; ++species) 
         {
