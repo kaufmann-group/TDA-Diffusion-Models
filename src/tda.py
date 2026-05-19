@@ -13,17 +13,16 @@ over some epsilon are averaged over independent ensembles.
 """
 
 """
-computes tda observables from one 2d projected path snapshot ... this function was 
-basically generated all by AI so i can't rly explain this function much ... :(
+computes tda observables from one 2d projected path snapshot ... 
 """
 def tda_observables(point_cloud, r=1.5, epsilon=0.2, max_edge_length=5.0):
     # removes duplicate points ... 
-    points = np.unique(points, axis=0)
+    point_cloud = np.unique(point_cloud, axis=0)
 
-    if points.shape[0] < 3:
+    if point_cloud.shape[0] < 3:
         return 0, 0.0, 0.0, 0
 
-    rips = gd.RipsComplex(points=points, max_edge_length=max_edge_length)
+    rips = gd.RipsComplex(points=point_cloud, max_edge_length=max_edge_length)
 
     # max_dimension=2 so h1 loops can die by being filled in according to ai ... idk what this means 
     simplex_tree = rips.create_simplex_tree(max_dimension=2)
