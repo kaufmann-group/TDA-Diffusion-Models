@@ -13,13 +13,10 @@ over some epsilon are averaged over independent ensembles.
 """
 
 """
-computes tda observables from one 2d projected path snapshot.
+computes tda observables from one 2d projected path snapshot ... this function was 
+basically generated all by AI so i can't rly explain this function much ... :(
 """
 def tda_observables(point_cloud, r=1.5, epsilon=0.2, max_edge_length=5.0):
-    
-
-    points = np.asarray(point_cloud, dtype=np.float64)
-
     # removes duplicate points ... 
     points = np.unique(points, axis=0)
 
@@ -28,7 +25,7 @@ def tda_observables(point_cloud, r=1.5, epsilon=0.2, max_edge_length=5.0):
 
     rips = gd.RipsComplex(points=points, max_edge_length=max_edge_length)
 
-    # max_dimension=2 so H1 loops can die by being filled in according to AI ... idk what this means 
+    # max_dimension=2 so h1 loops can die by being filled in according to ai ... idk what this means 
     simplex_tree = rips.create_simplex_tree(max_dimension=2)
 
     simplex_tree.persistence()
@@ -45,13 +42,13 @@ def tda_observables(point_cloud, r=1.5, epsilon=0.2, max_edge_length=5.0):
     deaths = h1[:, 1]
     persistences = deaths - births
 
-    # beta_1(r,t): number of H1 bars alive at filtration scale r ... also don't know what this means
+    # beta_1(r,t): number of h1 bars alive at filtration scale r ... also don't know what this means
     beta_1 = np.sum((births <= r) & (r < deaths))
 
-    # total H1 persistence
+    # total h1 persistence
     p_total = np.sum(persistences)
 
-    # max H1 persistence
+    # max h1 persistence
     p_max = np.max(persistences)
 
     # number of loops with persistence above threshold epsilon ... why is this important
@@ -111,7 +108,7 @@ if __name__ == "__main__":
 
         print(f"running ensemble number: {run + 1}, seed={seed}")
 
-        beta_1_values, p_max_values, p_total_values, n_epsilon_values = run_single_tda_trajectory(seed=seed, steps=steps, L=L, skip=skip, rates_matrix=rates_matrix, r=r, epsilon=epsilon, max_edge_length=max_edge_length,)
+        beta_1_values, p_max_values, p_total_values, n_epsilon_values = run_single_tda_trajectory(seed=seed, steps=steps, L=L, skip=skip, rates_matrix=rates_matrix, r=r, epsilon=epsilon, max_edge_length=max_edge_length)
         
         beta_1_ensemble.append(beta_1_values)
         p_max_ensemble.append(p_max_values)
