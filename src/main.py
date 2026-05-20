@@ -12,15 +12,15 @@ if __name__ == "__main__":
     """
     dimension = 3
     density = [1/3, 1/3, 1/3]
-<<<<<<< HEAD
     length = 300
-# The diagonal is zero, and the off-diagonal entries are positive, which means that the particles have a tendency to move in a certain direction, creating an asymmetry in the diffusion process. 
-# The specific values of the rates can influence the shape and behavior of the projected path, leading to interesting patterns in the resulting directed polymer path.
-=======
+
     length = 30
     max_simulation_steps = 100
 
->>>>>>> 2fb6a5b5e0742cb06a93b0dffcf7b6a260243ade
+    """
+    diagonal is zero & off diagonal entries are positive so particles move in a certain direction,
+    creating an asymmetry in the diffusion process
+    """
     rates_matrix_3d = np.array(
         [
             [0.0, 2.0, 2.0],
