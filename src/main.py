@@ -11,7 +11,8 @@ if __name__ == "__main__":
     dimension = 3
     density = [1/3, 1/3, 1/3]
     length = 300
-
+# The diagonal is zero, and the off-diagonal entries are positive, which means that the particles have a tendency to move in a certain direction, creating an asymmetry in the diffusion process. 
+# The specific values of the rates can influence the shape and behavior of the projected path, leading to interesting patterns in the resulting directed polymer path.
     rates_matrix_3d = np.array(
         [
             [0.0, 2.0, 2.0],
@@ -24,7 +25,7 @@ if __name__ == "__main__":
     asym_diffusion_2d = MultiSpeciesExclusionProcess(dimension=dimension, density=density, rates_matrix=rates_matrix_3d, length=length, seed=2504)
 
     asym_diffusion_2d.simulate(steps=100000)
-    path_2d = asym_diffusion_2d.get_path()
+    path_2d = asym_diffusion_2d.get_path_projection()
 
     plt.figure(figsize=(6, 6))
     plt.plot(path_2d[:, 0], path_2d[:, 1], "-o", markersize=2)
@@ -57,7 +58,7 @@ if __name__ == "__main__":
     asym_diffusion_3d = MultiSpeciesExclusionProcess(dimension=dimension, density=density, rates_matrix=rates_matrix_4d, length=length, seed=2504)
 
     asym_diffusion_3d.simulate(steps=100000)
-    path_3d = asym_diffusion_3d.get_path()
+    path_3d = asym_diffusion_3d.get_path_projection()
 
     fig = plt.figure(figsize=(6, 6))
     ax = fig.add_subplot(111, projection="3d")
