@@ -74,12 +74,6 @@ def single_tda_trajectory(seed, steps, L, skip, rates_matrix, r, epsilon, max_ed
 
 if __name__ == "__main__":
     """
-    tda statistics for the 2D height path of the three species exclusion process. note that for each
-    snapshot the clique complex is made then the h1 persistence intervals are calculated then
-    the following statistics are averaged over some N independent ensembles:
-
-    note that:
-
     <beta_1> = the ensemble averaged number of loops alive at the fixed filtration scale r 
         at scale r = 1.5 how many loops does the projected path typically have at time?
 
@@ -92,9 +86,10 @@ if __name__ == "__main__":
     <N_e> = the ensemble averaged number of h1 loops whose persistence is larger than epsilon
         how many loops are significant enough to survive beyond the noise threshold epsilon? 
     """
+
     steps = 35000
     L = 300
-    skip = 100
+    skip = 10
     N_runs = 50
 
     r = 1.5
@@ -113,10 +108,8 @@ if __name__ == "__main__":
     sampled_times = np.arange(0, steps + 1, skip)
     beta_1_ensemble, p_max_ensemble, p_total_ensemble, n_epsilon_ensemble = [], [], [], []
 
-    base_seed = 2504
-
     for run in range(N_runs):
-        seed = base_seed + run
+        seed = 2504 + run
 
         print(f"running ensemble number: {run + 1}, seed={seed}")
 
@@ -165,9 +158,10 @@ if __name__ == "__main__":
     axes[3].set_xlabel("monte carlo steps")
 
     plt.tight_layout()
-    plt.savefig("figures/tda_ensemble_fast_statistics.png", dpi=300)
+    plt.savefig("figures/tda_ensemble_statistics.png", dpi=300)
     plt.show()
 
     """
-    calculation of the dynamical critical exponent.
+    calculation of the dynamical critical exponent from persistance data -- made by esha :)
     """
+

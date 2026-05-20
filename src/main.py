@@ -6,10 +6,10 @@ import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider
 
 if __name__ == "__main__":
+
     """
     simple demonstration of three species polymer chain
     """
-
     dimension = 3
     density = [1/3, 1/3, 1/3]
     length = 30
@@ -101,7 +101,6 @@ if __name__ == "__main__":
     """
     dimension three case: projects onto a plane.
     """
-
     length = 300
 
     asym_diffusion_2d = MultiSpeciesExclusionProcess(dimension=dimension, density=density, rates_matrix=rates_matrix_3d, length=length, seed=2504)
