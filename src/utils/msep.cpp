@@ -424,7 +424,7 @@ private:
     }
 };
 
-PYBIND11_MODULE(msep_cpp, m) {
+PYBIND11_MODULE(msep, m) {
     py::class_<MultiSpeciesExclusionProcess>(m, "MultiSpeciesExclusionProcess")
         .def(py::init<int,
                 const std::vector<double>&,

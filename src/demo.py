@@ -1,9 +1,8 @@
-
-from msep.msep_cpp import MultiSpeciesExclusionProcess
-
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider
+
+from utils.msep import MultiSpeciesExclusionProcess
 
 if __name__ == "__main__":
 

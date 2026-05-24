@@ -3,14 +3,12 @@ the goal of this program is to demonstrate the multi species
 exclusion process falls within the the KPZ universality class.
 """
 
-from msep.msep_cpp import MultiSpeciesExclusionProcess
-
-import scipy as sp
 import numpy as np
 import matplotlib.pyplot as plt
 
 from utils.autocorrelation import autocorrelation
 from utils.relaxation_time import get_relaxation_time
+from utils.msep import MultiSpeciesExclusionProcess
 
 def get_dynamical_critical_exponent(species_size):
     taus = []

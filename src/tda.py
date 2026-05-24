@@ -1,10 +1,9 @@
-from msep.msep_cpp import MultiSpeciesExclusionProcess
-
 import numpy as np
 import gudhi as gd
 import matplotlib.pyplot as plt
 
 from utils.tda import tda_observables
+from utils.msep import MultiSpeciesExclusionProcess
 
 """
 runs none exclusion process trajectory then compute tda observables at certain times

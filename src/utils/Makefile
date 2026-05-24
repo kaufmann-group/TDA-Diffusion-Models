@@ -2,7 +2,7 @@ PYTHON := ../../.venv/bin/python3
 CXX := c++
 CXXFLAGS := -O3 -Wall -shared -std=c++17 -fPIC
 
-MODULE_NAME := msep_cpp
+MODULE_NAME := msep
 SRC := msep.cpp
 
 EXT_SUFFIX := $(shell $(PYTHON) -c "import sysconfig; print(sysconfig.get_config_var('EXT_SUFFIX'))")
