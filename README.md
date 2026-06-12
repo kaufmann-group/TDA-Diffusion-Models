@@ -4,7 +4,7 @@ This project relates to applying methods in Topological Data Analysis (TDA) to t
 
 ## Accomplishments
 
-- Simulate multi-species diffusion process given the swapping rates, length, number of species (dimension) and density of species.
+- Simulated multi-species diffusion process given the swapping rates, length, number of species (dimension) and density of species.
 - Successfully extracted roughness exponent ($\alpha$), growth exponent ($\beta$) and the dynamical critical exponent ($z$) critical exponents from multi-species diffusion processes'.
 
 ## Current Goals
